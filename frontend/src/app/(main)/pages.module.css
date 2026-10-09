@@ -11,7 +11,7 @@
 /* leaderboard */
 .shields { display: flex; gap: 10px; justify-content: center; align-items: flex-end; }
 .shields > :not(.current) { opacity: 0.35; filter: grayscale(0.6); }
-.board { display: grid; }
+.board { display: grid; list-style: none; } /* ranks are drawn by hand; the zone dividers are <li>s too */
 .entry { display: flex; align-items: center; gap: 14px; padding: 10px 14px; border-radius: 14px; }
 .entry.me { background: var(--selected-bg); }
 .rank { width: 32px; text-align: center; font-weight: 900; font-size: 17px; color: var(--muted); }
