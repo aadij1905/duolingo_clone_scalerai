@@ -136,7 +136,7 @@ export default function LessonPlayer({ skillId, mode, kind = "mix" }: { skillId:
       setPhase("done");
       void refreshMe();
       r.achievements.forEach((a) => toast({ icon: a.icon, title: `Achievement unlocked: ${a.title}`, body: a.description }));
-      if (r.daily_goal_reached) toast({ icon: "🎯", title: "Daily goal reached!", body: `+20 bonus gems` });
+      if (r.daily_goal_reached) toast({ icon: "🎯", title: "Daily goal reached!", body: "Bonus gems added to your total" });
     } catch (e) {
       const err = e as ApiError;
       if (err.code === "time_up") setBlocker("time");
@@ -299,7 +299,7 @@ export default function LessonPlayer({ skillId, mode, kind = "mix" }: { skillId:
           <Mascot mood="sad" size={110} />
           <h2>You ran out of hearts!</h2>
           <p className="muted">Practice to earn hearts back, refill with gems, or wait for them to regenerate.</p>
-          <button className="btn block" onClick={refillAndRetry} disabled={(me?.gems ?? 0) < 350}>Refill <Gem size={20} /> 350</button>
+          <button className="btn block" onClick={refillAndRetry} disabled={!me || me.gems < me.heart_refill_cost}>Refill <Gem size={20} /> {me?.heart_refill_cost}</button>
           <button className="btn ghost block" onClick={() => router.push("/lesson?mode=practice")}>Practice to earn hearts</button>
           <button className="btn ghost gray block" onClick={exit}>No thanks</button>
         </Modal>

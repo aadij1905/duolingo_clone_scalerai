@@ -51,6 +51,7 @@ export default function SettingsPage() {
     toast({ icon: "⏩", title: `Jumped ${label} ahead`, body: "Streak and hearts were re-evaluated." });
   }
   async function reset() {
+    if (!window.confirm("Erase all your XP, streak and progress? This can't be undone.")) return;
     await api.resetDemo();
     window.location.reload(); // fresh learner: reload so the app re-syncs timezone and every cached view
   }
@@ -173,7 +174,7 @@ export default function SettingsPage() {
 
       <section className="card">
         <h2>Demo controls</h2>
-        <p className="muted">Simulate days passing to test streaks, Streak Freezes, leagues and heart regeneration. The server clock is shared by every learner.</p>
+        <p className="muted">Simulate days passing to test streaks, Streak Freezes, leagues and heart regeneration. Only your account travels in time.</p>
         {clock && <p style={{ margin: "10px 0" }}>Server date: <b>{new Date(clock.now).toUTCString().slice(0, 22)}</b> {clock.offset_days !== 0 && <span className="muted">(+{clock.offset_days.toFixed(1)} days)</span>}</p>}
         <div className={s.options}>
           <button className="btn ghost small" onClick={() => travel(1, "1 day")}>+1 day</button>

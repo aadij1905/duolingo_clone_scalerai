@@ -1,5 +1,7 @@
 # Duolingo Clone — Spanish, French, Japanese & Hindi
 
+**Live demo:** https://duolingo-clone-scalerai.vercel.app · **Source:** https://github.com/aadij1905/duolingo_clone_scalerai
+
 A full-stack, multi-user clone of the Duolingo web app: four courses (🇪🇸 🇫🇷 🇯🇵 🇮🇳), the winding learning path with an easy-start difficulty ramp, a lesson player with eight exercise types (including listening and speaking) and the signature feedback bar, word hints, plus XP, streaks (with Streak Freezes), hearts that regenerate, daily quests with chests, weekly leagues with promotion, achievements, a gem shop, a timed **Legendary** challenge, a guidebook, mistakes review and dark mode.
 
 | | |
@@ -7,7 +9,7 @@ A full-stack, multi-user clone of the Duolingo web app: four courses (🇪🇸 �
 | **Frontend** | Next.js 16 (App Router) + TypeScript, plain CSS (design tokens + CSS modules), no UI libraries |
 | **Backend** | Python 3.13, FastAPI, SQLAlchemy 2, Pydantic 2 |
 | **Database** | SQLite (WAL mode, foreign keys enforced) |
-| **Tests** | pytest: 58 tests (game rules, HTTP API, accounts, languages, edge cases) · Playwright: onboarding + a full Japanese lesson in Chrome |
+| **Tests** | pytest: 59 tests (game rules, HTTP API, accounts, languages, edge cases) · Playwright: onboarding + a full Japanese lesson in Chrome |
 
 ---
 
@@ -69,7 +71,7 @@ The frontend proxies `/api/*` to the backend (`next.config.ts`). Set `BACKEND_UR
 | **Bonus:** dark mode (system / light / dark) | `globals.css` tokens, Settings |
 | **Bonus:** responsive: phone (bottom nav), tablet (icon sidebar), desktop (sidebar + right rail) | `shell.module.css` |
 | **Multi-user:** guest per browser, register / sign in / sign out, leagues of real learners + bots | `services/auth.py`, `routers/auth.py`, Settings → Account |
-| Three courses from one topic list; Japanese accepts kanji/kana, hiragana or romaji | `content.py`, `seed.py`, `grading.py` |
+| Four courses (Spanish, French, Japanese, Hindi) from one topic list; Japanese accepts kanji/kana, hiragana or romaji | `content.py`, `seed.py`, `grading.py` |
 | Onboarding (language, daily goal) and a course switcher on the flag | `/welcome`, `Shell.tsx` |
 | Easy start: short early lessons, exercise mix grows by unit, beginner protection, word hints, typo tolerance | `seed.py#STAGES`, `parts.tsx#HintText`, `grading.py` |
 | Listening (tap / type what you hear, 🐢 slow) and speaking (speech recognition, server-graded); "Can't listen/speak now" | `exercises/Listen*.tsx`, `Speak.tsx`, `LessonPlayer.tsx` |
@@ -334,8 +336,8 @@ Errors are always `{"error": "<code>", "message": "..."}` with a meaningful stat
 
 ## Deployment
 
-**Backend → Render** (`render.yaml` blueprint). New → Blueprint → pick the repo. It builds `backend/` and runs `uvicorn` on the **free** plan. Free instances have no persistent disk, so the SQLite file is re-created and re-seeded on every restart (including waking from idle): the demo always works, but accounts don't survive. To keep them, upgrade to a paid instance and add a disk (the commented lines in `render.yaml`). In the dashboard set `CORS_ORIGINS` to the frontend URL and, optionally, `GOOGLE_CLIENT_ID`.
+**Backend → Railway**: new service from the repo, root directory `backend/`. Railway installs `requirements.txt`, uses Python from `.python-version` and starts the command in `Procfile`. To keep accounts across redeploys, attach a volume (e.g. at `/data`) and set `DATABASE_URL=sqlite:////data/duolingo.db`; without one, the SQLite file is re-created and re-seeded on every deploy. Recommended env vars: `RESET_DB_ON_SCHEMA_CHANGE=0` (never wipe real accounts), `COOKIE_SECURE=1`, and optionally `GOOGLE_CLIENT_ID`.
 
-**Frontend → Vercel**: import the repo, root directory `frontend/`, env var `BACKEND_URL=https://<your-render-service>.onrender.com`. All browser calls go to `/api/*` on the Vercel domain and are proxied to the backend, so the session cookie is first-party.
+**Frontend → Vercel**: import the repo, root directory `frontend/`, env var `BACKEND_URL=https://<your-service>.up.railway.app`. All browser calls go to `/api/*` on the Vercel domain and are proxied to the backend, so the session cookie is first-party.
 
 **Google sign-in**: add the Vercel URL to the OAuth client's *Authorized JavaScript origins*.

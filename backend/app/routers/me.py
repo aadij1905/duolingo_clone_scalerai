@@ -32,7 +32,8 @@ def me_view(db: Session, user: User, clock: Clock) -> dict:
         "next_heart_at": nxt.isoformat() + "Z" if nxt else None,
         "streak": user.streak, "longest_streak": user.longest_streak,
         "streak_extended_today": streak.is_extended_today(user, today),
-        "streak_freezes": user.streak_freezes,
+        "streak_freezes": user.streak_freezes, "max_streak_freezes": settings.max_streak_freezes,
+        "heart_refill_cost": settings.heart_refill_gem_cost,  # prices live in config.py, never in the client
         "streak_event": getattr(user, "streak_event", {}) or {},
         "daily_goal_xp": user.daily_goal_xp, "daily_xp": xp.xp_on(db, user.id, today),
         "today": today.isoformat(),

@@ -9,6 +9,7 @@ export type Me = {
   league_event: { promoted?: string; demoted?: string; rank?: number };
   xp_total: number; gems: number; hearts: number; max_hearts: number; next_heart_at: string | null;
   streak: number; longest_streak: number; streak_extended_today: boolean; streak_freezes: number;
+  max_streak_freezes: number; heart_refill_cost: number;
   streak_event: { freezes_used?: number; streak_lost?: number };
   daily_goal_xp: number; daily_xp: number; today: string;
 };

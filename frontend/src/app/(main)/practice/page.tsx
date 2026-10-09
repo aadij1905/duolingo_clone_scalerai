@@ -56,7 +56,7 @@ export default function PracticePage() {
       <section className="card">
         <h2><Trophy size={24} /> Legendary challenges</h2>
         <p className="muted" style={{ marginBottom: 8 }}>
-          Timed challenge: 10 questions, {Math.floor(150 / 60)}:30 on the clock, no more than 3 mistakes. Doesn&apos;t use hearts. +40 XP.
+          Timed challenge: 10 questions, 2:30 on the clock, no more than 3 mistakes. Doesn&apos;t use hearts. +40 XP.
         </p>
         {completed.length === 0 && <p className="muted">Complete a skill to unlock its Legendary challenge.</p>}
         {completed.map((sk) => (

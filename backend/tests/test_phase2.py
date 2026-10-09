@@ -195,6 +195,22 @@ def test_league_promotion_and_demotion_at_week_rollover(client, clock, db_factor
     assert client.get("/api/me").json()["league_event"] == {"demoted": "Bronze", "rank": 13}
 
 
+def test_idle_learner_below_the_top_30_still_settles(client, clock, db_factory):
+    from app.models import User, XpEvent
+    from app.seed import new_user
+    with db_factory() as db:  # a busy week: 30 other Bronze learners outscore the idle demo learner
+        now = clock.now()
+        for i in range(30):
+            u = new_user(db, f"busy{i}", now)
+            db.add(XpEvent(user_id=u.id, amount=50, source="lesson", local_date=now.date(), created_at=now))
+        demo = db.query(User).filter_by(username="demo").one()
+        db.query(XpEvent).filter(XpEvent.user_id == demo.id).delete()
+        db.commit()
+    assert client.get("/api/leaderboard").json()["entries"][-1]["is_me"]
+    clock.offset += timedelta(days=7)
+    assert client.get("/api/me").status_code == 200
+
+
 def test_streak_calendar_and_reset_keeps_login(guest, solve):
     s = _play(guest, solve, skill_id=_first_skill(guest))
     guest.post(f"/api/sessions/{s['id']}/complete")

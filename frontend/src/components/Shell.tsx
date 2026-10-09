@@ -93,7 +93,7 @@ export function StatsBar() {
         <div className={s.popover}>
           <h3><Flame /> {me.streak} day streak</h3>
           <p className="muted">{me.streak_extended_today ? "You've extended your streak today. See you tomorrow!" : "Do a lesson today to extend your streak!"}</p>
-          <p>🧊 Streak Freezes equipped: <b>{me.streak_freezes}</b> / 2</p>
+          <p>🧊 Streak Freezes equipped: <b>{me.streak_freezes}</b> / {me.max_streak_freezes}</p>
           <p className="muted">Longest streak: {me.longest_streak} days</p>
         </div>
       )}
@@ -112,7 +112,7 @@ export function StatsBar() {
             {me.hearts >= me.max_hearts ? "You have full hearts. Keep on learning!" : `Next heart in ${mmss(Math.max(0, nextHeart ?? 0))}`}
           </p>
           <button className="btn ghost" onClick={refill} disabled={me.hearts >= me.max_hearts}>
-            Refill hearts <Gem size={20} /> 350
+            Refill hearts <Gem size={20} /> {me.heart_refill_cost}
           </button>
           <Link href="/practice" className="btn ghost">Practice to earn hearts</Link>
           <button className="btn ghost gray" disabled>Unlimited hearts <span className="coming-soon">Super · soon</span></button>
@@ -178,7 +178,7 @@ export function RightRail() {
       </section>
       <LeagueCard />
       <QuestsCard />
-      <nav className={s.footerLinks}><span>About</span><span>Blog</span><span>Store</span><span>Efficacy</span><span>Careers</span><span>Privacy</span></nav>
+      <nav className={s.footerLinks}><span>About</span><span>Blog</span><span>Store</span><span>Efficacy</span><span>Careers</span><Link href="/privacy">Privacy</Link></nav>
     </aside>
   );
 }

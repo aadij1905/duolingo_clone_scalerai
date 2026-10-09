@@ -39,14 +39,18 @@ def standings(db: Session, me: User, start: datetime, end: datetime) -> list[tup
                  .where(XpEvent.created_at >= start, XpEvent.created_at < end)
                  .group_by(XpEvent.user_id).subquery())
     xp = func.coalesce(weekly_xp.c.xp, 0)
-    return db.execute(
-        select(User.id, User.display_name, User.avatar_color, xp.label("xp"))
-        .outerjoin(weekly_xp, weekly_xp.c.user_id == User.id)
+    query = (select(User.id, User.display_name, User.avatar_color, xp.label("xp"))
+             .outerjoin(weekly_xp, weekly_xp.c.user_id == User.id))
+    rows = db.execute(
         # Like Duolingo, you join the week's league by earning XP: idle guests never show up.
-        .where(or_(User.is_bot.is_(True), User.id == me.id, and_(User.league_tier == me.league_tier, xp > 0)))
+        query.where(or_(User.is_bot.is_(True), User.id == me.id, and_(User.league_tier == me.league_tier, xp > 0)))
         .order_by(xp.desc(), User.id)
         .limit(30)  # ponytail: one cohort per tier; real leagues would bucket learners into groups of 30
     ).all()
+    # Below the 30 shown: the learner still sees (and is settled as) the last row, never missing.
+    if all(r[0] != me.id for r in rows):
+        rows = [*rows[:-1], db.execute(query.where(User.id == me.id)).one()]
+    return rows
 
 
 def weekly(db: Session, me: User, now: datetime) -> dict:

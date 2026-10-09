@@ -29,7 +29,7 @@ from .services.leaderboard import top_up_rivals, week_bounds
 LESSONS_PER_UNIT = {1: 2, 2: 3, 3: 4}  # easy start: early skills are shorter
 DRILL = -1  # position of the hidden lesson holding listening/speaking practice exercises
 
-# Exercise mix per difficulty stage (see PLAN.md §2).
+# Exercise mix per difficulty stage: lessons get longer and add typing, listening and speaking.
 STAGES = {
     0: ["pick", "pick", "pairs", "listen_word"],                                       # unit 1, lesson 1
     1: ["pick", "translate", "fill", "speak_word", "pairs"],                            # unit 1, lesson 2
