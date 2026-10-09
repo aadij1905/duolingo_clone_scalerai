@@ -334,7 +334,7 @@ Errors are always `{"error": "<code>", "message": "..."}` with a meaningful stat
 
 ## Deployment
 
-**Backend → Render** (`render.yaml` blueprint). New → Blueprint → pick the repo. It builds `backend/`, runs `uvicorn`, and mounts a 1 GB persistent disk at `/var/data` for the SQLite file (`DATABASE_URL=sqlite:////var/data/duolingo.db`), so accounts survive restarts and redeploys. Disks need the Starter plan; on the free plan remove `plan`, `disk` and `DATABASE_URL`, and the database is re-seeded on every restart. In the dashboard set `CORS_ORIGINS` to the frontend URL and, optionally, `GOOGLE_CLIENT_ID`. `RESET_DB_ON_SCHEMA_CHANGE=0` makes a deploy with a new schema refuse to start instead of wiping accounts.
+**Backend → Render** (`render.yaml` blueprint). New → Blueprint → pick the repo. It builds `backend/` and runs `uvicorn` on the **free** plan. Free instances have no persistent disk, so the SQLite file is re-created and re-seeded on every restart (including waking from idle): the demo always works, but accounts don't survive. To keep them, upgrade to a paid instance and add a disk (the commented lines in `render.yaml`). In the dashboard set `CORS_ORIGINS` to the frontend URL and, optionally, `GOOGLE_CLIENT_ID`.
 
 **Frontend → Vercel**: import the repo, root directory `frontend/`, env var `BACKEND_URL=https://<your-render-service>.onrender.com`. All browser calls go to `/api/*` on the Vercel domain and are proxied to the backend, so the session cookie is first-party.
 
