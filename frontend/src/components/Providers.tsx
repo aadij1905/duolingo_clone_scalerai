@@ -2,6 +2,7 @@
 // App-wide client state: the current learner ("me") and toast notifications.
 // Server-confirmed values only: we refetch `me` after every mutation instead
 // of predicting XP/gems/hearts on the client (those are values users care about).
+import { usePathname } from "next/navigation";
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
 import { api, ApiError, type Me } from "@/lib/api";
 import { setSpeechLocale } from "@/lib/sound";
@@ -29,6 +30,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
   const [me, setMe] = useState<Me | null>(null);
   const [toasts, setToasts] = useState<Toast[]>([]);
   const [league, setLeague] = useState<Me["league_event"] | null>(null);
+  const isPublic = usePathname() === "/privacy"; // readable without a session (Google's consent-screen check)
   const nextId = useRef(0);
 
   const toast = useCallback((t: Omit<Toast, "id">) => {
@@ -79,7 +81,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
   return (
     <AppContext.Provider value={{ me, setMe: setMeTracked, refreshMe, toast }}>
       {/* Pages only mount once the learner (or new guest) is loaded, so every API call is signed in. */}
-      {me ? children : <div style={{ display: "grid", placeItems: "center", minHeight: "100dvh" }}><Mascot mood="think" className="bounce" /></div>}
+      {me || isPublic ? children : <div style={{ display: "grid", placeItems: "center", minHeight: "100dvh" }}><Mascot mood="think" className="bounce" /></div>}
       {league && (
         <Modal label="League result" onClose={() => setLeague(null)}>
           {league.promoted && <Confetti />}
