@@ -1,0 +1,33 @@
+# Render Blueprint for the FastAPI backend (the frontend deploys to Vercel).
+# The SQLite file lives on a persistent disk, so accounts and progress survive
+# restarts and redeploys. Disks need a paid instance (Starter). On the free plan,
+# delete `plan` and `disk` and the DATABASE_URL entry: the app still works, but the
+# database is wiped and re-seeded on every restart, which includes waking from idle.
+services:
+  - type: web
+    name: duolingo-clone-api
+    runtime: python
+    plan: starter
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /api/health
+    disk:
+      name: data
+      mountPath: /var/data
+      sizeGB: 1
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.13.5
+      - key: DATABASE_URL
+        value: sqlite:////var/data/duolingo.db
+      - key: CORS_ORIGINS
+        value: https://your-frontend.vercel.app
+      - key: GOOGLE_CLIENT_ID
+        sync: false  # set in the Render dashboard (optional: enables "Continue with Google")
+      - key: RESET_DB_ON_SCHEMA_CHANGE
+        value: "0"  # never wipe real accounts on deploy; boot fails loudly instead
+      - key: COOKIE_SECURE
+        value: "1"
+      - key: HEART_REGEN_MINUTES
+        value: "30"

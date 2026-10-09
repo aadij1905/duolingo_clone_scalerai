@@ -1,0 +1,80 @@
+/* App chrome: left sidebar (desktop), right rail (wide desktop), top bar + bottom nav (mobile). */
+.shell { display: flex; justify-content: center; min-height: 100vh; }
+
+.sidebar {
+  position: fixed; left: 0; top: 0; bottom: 0; width: var(--sidebar-w);
+  border-right: 2px solid var(--border); padding: 24px 16px; display: flex; flex-direction: column; gap: 4px;
+  background: var(--bg); z-index: 20;
+}
+.logo { font-size: 30px; font-weight: 900; color: var(--feather); letter-spacing: -1px; padding: 0 16px 28px; }
+.navItem {
+  display: flex; align-items: center; gap: 20px; padding: 8px 16px; min-height: 52px;
+  border-radius: 12px; border: 2px solid transparent;
+  font-size: 15px; font-weight: 800; letter-spacing: 0.8px; text-transform: uppercase; color: var(--muted);
+}
+.navItem:hover { background: var(--surface-2); }
+.navItem.active { background: var(--selected-bg); border-color: var(--selected-border); color: var(--macaw); }
+
+.main { flex: 1; display: flex; justify-content: center; gap: 48px; padding: 24px 24px 120px; margin-left: var(--sidebar-w); min-width: 0; }
+.content { width: 100%; max-width: 600px; min-width: 0; }
+.rail { width: var(--rail-w); flex-shrink: 0; display: flex; flex-direction: column; gap: 24px; position: sticky; top: 24px; align-self: flex-start; }
+
+/* ---- stats bar */
+.stats { display: flex; align-items: center; justify-content: space-between; gap: 4px; position: relative; }
+.stat {
+  display: flex; align-items: center; gap: 6px; padding: 8px 10px; border-radius: 12px;
+  font-size: 16px; font-weight: 800;
+}
+.stat:hover { background: var(--surface-2); }
+.flag { font-size: 26px; line-height: 1; }
+.popover {
+  position: absolute; top: 52px; left: 0; right: 0; z-index: 30;
+  background: var(--surface); border: 2px solid var(--border); border-radius: var(--radius);
+  padding: 20px; display: grid; gap: 14px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+  animation: pop 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.popover h3 { font-size: 20px; }
+.heartRow { display: flex; gap: 6px; }
+.courseRow { display: flex; align-items: center; gap: 12px; padding: 8px 12px; border: 2px solid var(--border); border-radius: 14px; }
+.courseRow:hover { background: var(--surface-2); }
+.currentCourse { background: var(--selected-bg); border-color: var(--selected-border); color: var(--macaw); }
+.openedChest { opacity: 0.4; filter: grayscale(1); }
+
+/* ---- rail cards */
+.questRow { display: flex; align-items: center; gap: 14px; }
+.questRow > div { flex: 1; display: grid; gap: 8px; }
+.cardHead { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+.cardHead h2 { margin: 0; }
+.cardHead a { color: var(--macaw); font-weight: 800; font-size: 14px; text-transform: uppercase; }
+.superCard { background: linear-gradient(135deg, #0a2b3d, #1d4a6b); color: #fff; border: 0; }
+.superCard h2 { color: #fff; }
+.footerLinks { display: flex; flex-wrap: wrap; gap: 4px 16px; justify-content: center; font-size: 13px; font-weight: 800; color: var(--faint); text-transform: uppercase; }
+
+/* ---- mobile chrome */
+.topbar, .bottomnav { display: none; }
+
+@media (max-width: 1159px) {
+  .rail { display: none; }
+  .topbar { display: block; position: sticky; top: 0; z-index: 25; background: var(--bg); border-bottom: 2px solid var(--border); padding: 4px 12px; }
+  .topbar .stats { max-width: 600px; margin: 0 auto; }
+}
+@media (max-width: 1159px) and (min-width: 768px) {
+  /* tablet: collapse the sidebar to icons */
+  .sidebar { width: 88px; align-items: center; padding: 24px 8px; }
+  .logo { font-size: 0; padding: 0 0 24px; }
+  .logo::first-letter { font-size: 32px; }
+  .navItem { justify-content: center; padding: 8px; }
+  .navItem span { display: none; }
+  .main { margin-left: 88px; }
+  .topbar { margin-left: 88px; }
+}
+@media (max-width: 767px) {
+  .sidebar { display: none; }
+  .main { margin-left: 0; padding: 16px 16px 110px; }
+  .bottomnav {
+    display: flex; justify-content: space-around; position: fixed; left: 0; right: 0; bottom: 0; z-index: 25;
+    background: var(--bg); border-top: 2px solid var(--border); padding: 6px 4px calc(6px + env(safe-area-inset-bottom));
+  }
+  .bottomnav a { padding: 6px 10px; border-radius: 12px; border: 2px solid transparent; }
+  .bottomnav a.active { background: var(--selected-bg); border-color: var(--selected-border); }
+}
