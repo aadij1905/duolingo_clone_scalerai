@@ -7,7 +7,7 @@ A full-stack, multi-user clone of the Duolingo web app: four courses (🇪🇸 �
 | **Frontend** | Next.js 16 (App Router) + TypeScript, plain CSS (design tokens + CSS modules), no UI libraries |
 | **Backend** | Python 3.13, FastAPI, SQLAlchemy 2, Pydantic 2 |
 | **Database** | SQLite (WAL mode, foreign keys enforced) |
-| **Tests** | pytest: 57 tests (game rules, HTTP API, accounts, languages, edge cases) · Playwright: onboarding + a full Japanese lesson in Chrome |
+| **Tests** | pytest: 58 tests (game rules, HTTP API, accounts, languages, edge cases) · Playwright: onboarding + a full Japanese lesson in Chrome |
 
 ---
 

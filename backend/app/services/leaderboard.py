@@ -11,7 +11,7 @@ in a new week ranks the learner in the week they last played, moves them up
 import random
 from datetime import datetime, time, timedelta
 
-from sqlalchemy import func, or_, select
+from sqlalchemy import and_, func, or_, select
 from sqlalchemy.orm import Session
 
 from ..models import User, XpEvent
@@ -42,7 +42,8 @@ def standings(db: Session, me: User, start: datetime, end: datetime) -> list[tup
     return db.execute(
         select(User.id, User.display_name, User.avatar_color, xp.label("xp"))
         .outerjoin(weekly_xp, weekly_xp.c.user_id == User.id)
-        .where(or_(User.is_bot.is_(True), User.league_tier == me.league_tier, User.id == me.id))
+        # Like Duolingo, you join the week's league by earning XP: idle guests never show up.
+        .where(or_(User.is_bot.is_(True), User.id == me.id, and_(User.league_tier == me.league_tier, xp > 0)))
         .order_by(xp.desc(), User.id)
         .limit(30)  # ponytail: one cohort per tier; real leagues would bucket learners into groups of 30
     ).all()

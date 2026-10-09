@@ -300,3 +300,16 @@ def test_production_refuses_to_wipe_an_old_schema(tmp_path, monkeypatch):
     monkeypatch.setattr(db_mod, "settings", dataclasses.replace(db_mod.settings, reset_db_on_schema_change=False))
     with pytest.raises(RuntimeError, match="Migrate it"):
         db_mod.ensure_schema(eng)
+
+
+def test_idle_guests_are_not_in_the_league(client, guest, solve):
+    from fastapi.testclient import TestClient
+    from app.main import app as fastapi_app
+    for _ in range(3):  # visitors who never play
+        assert TestClient(fastapi_app).post("/api/auth/guest").status_code == 200
+    names = [e["name"] for e in client.get("/api/leaderboard").json()["entries"]]
+    assert "New learner" not in names and len(names) == 13  # demo + 12 bots
+    assert any(e["is_me"] for e in guest.get("/api/leaderboard").json()["entries"])  # you always see yourself
+    s = _play(guest, solve, skill_id=_first_skill(guest))
+    guest.post(f"/api/sessions/{s['id']}/complete")
+    assert "New learner" in [e["name"] for e in client.get("/api/leaderboard").json()["entries"]]
