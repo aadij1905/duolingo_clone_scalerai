@@ -77,6 +77,8 @@ export default function WelcomePage() {
           {!me.registered && <>
             <button className="btn ghost block" onClick={() => setStep("signin")}>I already have an account</button>
             <button className="btn ghost gray block" onClick={demo}>Explore the demo account</button>
+            {/* A new Google account (or a guest linking Google) isn't onboarded yet, so it lands back here to pick a course. */}
+            <GoogleButton onDone={() => router.push("/")} />
           </>}
         </>}
         {step === "goal" && <>
