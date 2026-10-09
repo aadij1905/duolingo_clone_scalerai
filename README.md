@@ -1,6 +1,6 @@
 # Duolingo Clone — Spanish, French, Japanese & Hindi
 
-**Live demo:** https://duolingo-clone-scalerai.vercel.app · **Source:** https://github.com/aadij1905/duolingo_clone_scalerai
+**Live demo:** https://duolingo-clone-scalerai.vercel.app · **API docs:** https://duolingoclonescalerai-production.up.railway.app/docs · **Source:** https://github.com/aadij1905/duolingo_clone_scalerai
 
 A full-stack, multi-user clone of the Duolingo web app: four courses (🇪🇸 🇫🇷 🇯🇵 🇮🇳), the winding learning path with an easy-start difficulty ramp, a lesson player with eight exercise types (including listening and speaking) and the signature feedback bar, word hints, plus XP, streaks (with Streak Freezes), hearts that regenerate, daily quests with chests, weekly leagues with promotion, achievements, a gem shop, a timed **Legendary** challenge, a guidebook, mistakes review and dark mode.
 
@@ -324,7 +324,7 @@ Errors are always `{"error": "<code>", "message": "..."}` with a meaningful stat
 ## Assumptions & simplifications
 
 - **Accounts** are username + password, or Google: no email verification, password reset or login rate limiting. Google ID tokens are checked with Google's tokeninfo endpoint (one call per sign-in). Guests that never register stay in the database (add a cleanup job if that matters).
-- **The demo clock is global**: time travel moves every learner's day. Turn dev routes off (`ENABLE_DEV_ROUTES=0`) for a public deployment.
+- **Time travel is per learner**: Settings → Demo controls shifts only your own clock (stored on your user row), so streak and heart logic can be tested on the hosted demo. Turn dev routes off (`ENABLE_DEV_ROUTES=0`) for a real deployment.
 - **Four courses** for English speakers (Hindi and Japanese accept their own script or romanization), generated from one topic list (`content.py`): 3 units, 9 skills and 27 lessons each. Exercises are generated deterministically, so content is easy to extend. Speech uses the browser: voice quality depends on the OS, and speaking needs Chrome, Edge or Safari (Firefox skips it automatically).
 - **Gems are mocked**; Super / unlimited hearts / speaking / friends are "Coming soon" placeholders.
 - **Audio** uses the browser's speech synthesis (voice quality depends on the OS) and Web Audio tones, so there are no audio files.
